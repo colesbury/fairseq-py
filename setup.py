@@ -9,8 +9,8 @@
 from setuptools import setup, find_packages, Extension
 from setuptools.command.build_py import build_py
 import sys
+import torch
 from torch.utils.ffi import create_extension
-
 
 if sys.version_info < (3,):
     sys.exit('Sorry, Python3 is required for fairseq.')
@@ -33,13 +33,15 @@ bleu = Extension(
     extra_compile_args=['-std=c++11'],
 )
 
+WITH_CUDA = torch.cuda.is_available()
+
 conv_tbc = create_extension(
     'fairseq.temporal_convolution_tbc',
     relative_to='fairseq',
     headers=['fairseq/clib/temporal_convolution_tbc/temporal_convolution_tbc.h'],
     sources=['fairseq/clib/temporal_convolution_tbc/temporal_convolution_tbc.cpp'],
-    define_macros=[('WITH_CUDA', None)],
-    with_cuda=True,
+    define_macros=[('WITH_CUDA', None)] if WITH_CUDA else [],
+    with_cuda=WITH_CUDA,
     extra_compile_args=['-std=c++11'],
 )
 
