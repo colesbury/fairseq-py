@@ -1,0 +1,17 @@
+# https://travis-ci.org/pytorch/pytorch
+language: python
+matrix:
+  include:
+  - python: 3.5
+    env: PYTORCH_URL=http://download.pytorch.org/whl/cu80/torch-0.2.0.post3-cp35-cp35m-manylinux1_x86_64.whl
+  - python: 3.6
+    env: PYTORCH_URL=http://download.pytorch.org/whl/cu80/torch-0.2.0.post3-cp36-cp36m-manylinux1_x86_64.whl
+
+install:
+  - pip install $PYTORCH_URL
+  - pip install .
+  - pip install -r requirements.txt
+
+script:
+  - python tests/test_label_smoothing.py
+  - python tests/test_convtbc.py
